@@ -1,0 +1,30 @@
+# IDEs
+.idea/
+.vscode/
+
+# Build files
+*/build/
+*/target/
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+build/
+!frontend/build/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+.env
