@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/save")
+    @PostMapping()
     void postUser(@RequestBody @Valid UserDTO dto) {
         userService.saveUser(dto);
     }
