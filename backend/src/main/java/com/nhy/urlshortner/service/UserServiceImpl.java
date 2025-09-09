@@ -12,11 +12,12 @@ public class UserServiceImpl implements UserService{
     private final UserRepository repository;
 
     @Override
-    public void saveUser(UserDTO dto) {
+    public UserDTO saveUser(UserDTO dto) {
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
-        repository.save(user);
+        User savedUser = repository.save(user);
+        return new UserDTO(savedUser.getUsername(), savedUser.getEmail(), null);
     }
 }

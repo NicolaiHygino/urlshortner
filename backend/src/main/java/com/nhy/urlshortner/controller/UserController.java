@@ -13,7 +13,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping()
-    void postUser(@RequestBody @Valid UserDTO dto) {
-        userService.saveUser(dto);
+    UserDTO postUser(@RequestBody @Valid UserDTO dto) {
+        return userService.saveUser(dto);
     }
 }
