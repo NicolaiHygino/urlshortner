@@ -3,11 +3,13 @@ package com.nhy.urlshortner.service;
 import com.nhy.urlshortner.domain.User;
 import com.nhy.urlshortner.dto.UserDTO;
 import com.nhy.urlshortner.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,17 +26,21 @@ public class UserServiceImplTest {
     @Test
     void saveUser_shouldSAveUserWithCorrectData() {
         // Given
-        UserDTO userDTO = new UserDTO("testuser", "test@example.com", "password123");
+        var userDTO = new UserDTO("testuser", "test@example.com", "password123");
+        var user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
         // When
         userService.saveUser(userDTO);
 
         // Then
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        var userCaptor = ArgumentCaptor.forClass(User.class);
 
         verify(userRepository).save(userCaptor.capture());
 
-        User savedUser = userCaptor.getValue();
+        var savedUser = userCaptor.getValue();
 
         assertEquals(userDTO.getUsername(), savedUser.getUsername());
         assertEquals(userDTO.getPassword(), savedUser.getPassword());
