@@ -13,7 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,5 +64,17 @@ class UrlControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inputDto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testRedirectToOriginalUrl() throws Exception {
+        var shortCode = "abcdef";
+        var longUrl = "https://example.com";
+
+        when(urlService.getOriginalUrl(shortCode)).thenReturn(longUrl);
+
+        mockMvc.perform(get("/urls/{shortCode}", shortCode))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl(longUrl));
     }
 }

@@ -63,4 +63,34 @@ public class UrlServiceImplTest {
             Assertions.assertThat(capturedUrl.getShortCode()).isEqualTo(shortCode);
         }
     }
+
+    @Test
+    void getOriginalUrl_shouldReturnLongUrl_whenShortCodeExists() {
+        // Given
+        var shortCode = "shortCode";
+        var longUrl = "https://www.nicolai.com";
+        var url = new Url();
+        url.setLongUrl(longUrl);
+        url.setShortCode(shortCode);
+
+        Mockito.when(urlRepository.findByShortCode(shortCode)).thenReturn(url);
+
+        // When
+        var result = urlService.getOriginalUrl(shortCode);
+
+        // Then
+        Assertions.assertThat(result).isEqualTo(longUrl);
+    }
+
+    @Test
+    void getOriginalUrl_shouldThrowException_whenShortCodeDoesNotExist() {
+        // Given
+        var shortCode = "nonExistent";
+        Mockito.when(urlRepository.findByShortCode(shortCode)).thenReturn(null);
+
+        // When & Then
+        Assertions.assertThatThrownBy(() -> urlService.getOriginalUrl(shortCode))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Url not found for short code: " + shortCode);
+    }
 }

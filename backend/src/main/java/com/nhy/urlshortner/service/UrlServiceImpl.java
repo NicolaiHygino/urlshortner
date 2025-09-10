@@ -28,4 +28,13 @@ public class UrlServiceImpl implements  UrlService{
         Url savedUrl = urlRepository.save(url);
         return new UrlDTO(savedUrl.getLongUrl(), savedUrl.getId());
     }
+
+    @Override
+    public String getOriginalUrl(String shortCode) {
+        Url url = urlRepository.findByShortCode(shortCode);
+        if (url == null) {
+            throw new RuntimeException("Url not found for short code: " + shortCode);
+        }
+        return url.getLongUrl();
+    }
 }
